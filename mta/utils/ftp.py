@@ -290,6 +290,9 @@ class FTPClient(object):
     def connect(self):
         self.ftp = ftplib.FTP(self.host)
         self.ftp.login(self.login, self.password)
+        print(self.login)
+        print("=====self.password========")
+        print(self.password)
         logger.info("FTP Server login successful")
 
     def update_time_difference(self):
