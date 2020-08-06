@@ -33,7 +33,7 @@ class AddProjectView(AllProjectView):
         description = Input(locator='.//textarea[@id="idDescription"]')
         next_button = Button("Next")
         cancel_button = Button("Cancel")
-        fill_strategy = WaitFillViewStrategy("20s")
+        fill_strategy = WaitFillViewStrategy("30s")
 
         @property
         def is_displayed(self):
@@ -41,6 +41,8 @@ class AddProjectView(AllProjectView):
 
         def after_fill(self, was_change):
             self.next_button.click()
+            import time
+            time.sleep(10)
 
     @View.nested
     class add_applications(View):  # noqa
