@@ -288,11 +288,10 @@ class FTPClient(object):
             self.update_time_difference()
 
     def connect(self):
+        print(self.host)
+        print("================")
         self.ftp = ftplib.FTP(self.host)
         self.ftp.login(self.login, self.password)
-        print(self.login)
-        print("=====self.password========")
-        print(self.password)
         logger.info("FTP Server login successful")
 
     def update_time_difference(self):
@@ -435,7 +434,7 @@ class FTPClient(object):
 
         """
         self.ftp.quit()
-        # self.ftp.close()
+        self.ftp.close()
         self.ftp = None
 
     def retrbinary(self, f, callback):
