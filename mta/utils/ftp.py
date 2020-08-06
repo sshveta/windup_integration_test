@@ -432,7 +432,7 @@ class FTPClient(object):
 
         """
         self.ftp.quit()
-        self.ftp.close()
+        # self.ftp.close()
         self.ftp = None
 
     def retrbinary(self, f, callback):
