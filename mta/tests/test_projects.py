@@ -72,6 +72,7 @@ def test_delete_application(mta_app):
             1. Next button should be enabled after uploading application file
             2. Next button should be disabled after deleting application file
     """
+    application = mta_app
     project_collection = application.collections.projects
     view = navigate_to(project_collection, "Add")
     view.create_project.fill(
