@@ -13,7 +13,23 @@ from mta.utils.update import update
 
 @pytest.mark.parametrize("mta_app", ["ViaWebUI", "ViaOperatorUI"], indirect=True)
 def test_project_crud(mta_app, create_minimal_project):
-
+    """
+    Polarion:
+        assignee: ghubale
+        initialEstimate: 1/12h
+        caseimportance: high
+        caseposneg: positive
+        testtype: functional
+        casecomponent: WebConsole
+        testSteps:
+            1. Create project
+            2. Edit project name or description
+            3. Click on delete action button or select delete option from kebab drop down
+        expectedResults:
+            1. Project should be created properly
+            2. Project name or description should be updated properly
+            3. Project should get deleted
+    """
     project, project_collection = create_minimal_project
     assert project.exists
 
@@ -29,15 +45,33 @@ def test_project_crud(mta_app, create_minimal_project):
         project.description = update_desc
 
     assert project.exists
+    # check name and description both updated on UI or not
+    proj = project_collection.get_project(project.name)
+    assert proj.name.text == updated_name
+    assert proj.description.text == update_desc
 
 
 @pytest.mark.parametrize("mta_app", ["ViaWebUI", "ViaOperatorUI"], indirect=True)
 def test_delete_application(mta_app):
+    """Delete uploaded application file and check if next button gets disabled
+
+    Polarion:
+        assignee: ghubale
+        initialEstimate: 1/12h
+        caseimportance: medium
+        caseposneg: positive
+        testtype: functional
+        casecomponent: WebConsole
+        testSteps:
+            1. Go to project all page and click on `Create project` button
+            2. Add name and description and click on `Next` button
+            3. Browse and add application file
+            4. Click on delete button
+        expectedResults:
+            1. Next button should be disabled before uploading application file
+            1. Next button should be enabled after uploading application file
+            2. Next button should be disabled after deleting application file
     """
-    Test01 -08
-    Delete uploaded application file and check if next button gets disabled
-    """
-    application = mta_app
     project_collection = application.collections.projects
     view = navigate_to(project_collection, "Add")
     view.create_project.fill(
@@ -51,6 +85,7 @@ def test_delete_application(mta_app):
     view.add_applications.upload_file.fill(file_path)
     wait_for(lambda: view.add_applications.next_button.is_enabled, delay=0.2, timeout=60)
     assert view.add_applications.next_button.is_enabled
+    view.add_applications.next_button.wait_displayed()
     view.add_applications.delete_application.click()
 
     view.add_applications.next_button.wait_displayed()
@@ -64,6 +99,20 @@ def test_delete_application(mta_app):
 
 @pytest.mark.parametrize("mta_app", ["ViaWebUI", "ViaOperatorUI"], indirect=True)
 def test_application_report(mta_app, create_minimal_project):
+    """
+    Polarion:
+        assignee: ghubale
+        initialEstimate: 1/12h
+        caseimportance: medium
+        caseposneg: positive
+        testtype: functional
+        casecomponent: WebConsole
+        testSteps:
+            1. Create project and run analysis
+            2. Click on `report` action button
+        expectedResults:
+            1. It should show report analysis in detail page
+    """
     project, project_collection = create_minimal_project
     view = project_collection.create_view(AnalysisResultsView)
     view.wait_displayed()
@@ -73,12 +122,25 @@ def test_application_report(mta_app, create_minimal_project):
     assert view.is_displayed
 
 
-@pytest.mark.parametrize("mta_app", ["ViaWebUI"], indirect=True)
-def test_sort_projects(
-    mta_app, create_minimal_project, create_project_with_two_apps, create_project
-):
-    """
-    Sort Projects
+def test_sort_projects(create_minimal_project, create_project_with_two_apps, create_project):
+    """ Test to sort Projects
+
+     Polarion:
+        assignee: ghubale
+        initialEstimate: 1/12h
+        caseimportance: medium
+        caseposneg: positive
+        testtype: functional
+        casecomponent: WebConsole
+        testSteps:
+            1. Create three different projects
+            2. Go to project all page
+            3. Sort projects by
+                {"name" > "ascending" and "descending",
+                 "Applications" > "ascending" and "descending",
+                 "Status" > "ascending" and "descending"}
+        expectedResults:
+            1. All values should get sorted properly
     """
     project1, project_collection = create_minimal_project
     assert project1.exists
@@ -97,10 +159,21 @@ def test_sort_projects(
     project_collection.sort_projects("Status", "descending")
 
 
-@pytest.mark.parametrize("mta_app", ["ViaWebUI"], indirect=True)
-def test_search_project(mta_app, create_minimal_project):
-    """
-    Search Projects
+def test_search_project(create_minimal_project):
+    """Test search Projects
+
+    Polarion:
+        assignee: ghubale
+        initialEstimate: 1/12h
+        caseimportance: medium
+        caseposneg: positive
+        testtype: functional
+        casecomponent: WebConsole
+        testSteps:
+            1. Create project
+            2. Go to project all page and search by name
+        expectedResults:
+            1. Project with matching search value should appear
     """
     project, project_collection = create_minimal_project
     assert project.exists
